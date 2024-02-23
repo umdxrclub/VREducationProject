@@ -6,6 +6,10 @@ public class NodeDup : MonoBehaviour
     
 {
     public NodeRep nodeRepPrefab;
+    public LinkedList<NodeRep> nodes;
+
+    
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +24,11 @@ public class NodeDup : MonoBehaviour
     void Duplicate()
     {
         NodeRep nodeRep = Instantiate(nodeRepPrefab);
-      
+        nodes.AddLast(nodeRep);
+         
     }
+
+
+   
     
 }
