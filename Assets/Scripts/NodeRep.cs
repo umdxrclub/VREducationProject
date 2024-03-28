@@ -52,7 +52,7 @@ public class NodeRep : MonoBehaviour
         graphic.color = color;
     }
 
-    public void Attach(NodeRep other)
+    public void Link(NodeRep other)
     {
         // If other is valid, set attach to other.ending 
         if (other)
