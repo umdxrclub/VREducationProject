@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using DefaultNamespace;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class NodeDup : MonoBehaviour
@@ -8,32 +11,49 @@ public class NodeDup : MonoBehaviour
 {
     public NodeRep nodeRepPrefab;
     public LinkedList<NodeRep> nodes;
+    public EventLinkedList<int> eventLst;
+
+
+    public void NodeBreakListener()
+    {
+        BuildList();
+    }
+
+    private void Awake()
+    {
+        eventLst = new EventLinkedList<int>();
+        eventLst.onListUpdated += BuildList;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        // Duplicate();
+        eventLst.AddLast(1);
+        eventLst.AddLast(2);
+        eventLst.AddLast(3);
     }
 
     // Update is called once per frame
     void Update()
     {
+        
     }
 
     void Duplicate()
     {
         NodeRep nodeRep = Instantiate(nodeRepPrefab);
         nodes.AddLast(nodeRep);
+
     }
 
     public void ListenToList<T>(EventLinkedList<T> list)
     {
-        void BuildThisList()
-        {
-            BuildList(list);
-        }
-        
-        list.onListUpdated += BuildThisList;
+        // void BuildThisList()
+        // {
+        //     BuildList(list);
+        // }
+        //
+        // list.onListUpdated += BuildThisList;
     }
 
     /// <summary>
@@ -41,7 +61,7 @@ public class NodeDup : MonoBehaviour
     /// </summary>
     /// <param name="list"></param>
     /// <typeparam name="T"></typeparam>
-    private void BuildList<T>(EventLinkedList<T> list)
+    private void BuildList()
     {
         // iterate through the linked list 
         // for each node
@@ -57,9 +77,10 @@ public class NodeDup : MonoBehaviour
             Destroy(child.gameObject);
         }
         
-        foreach (var value in list)
+        foreach (var value in eventLst)
         {
             NodeRep nodeRep = Instantiate(nodeRepPrefab, transform);
+            nodeRep.onNodeLinkBroken.AddListener(NodeBreakListener);
             if (prev)
             {
                 nodeRep.transform.position = prev.transform.position + Vector3.right;
@@ -78,5 +99,6 @@ public class NodeDup : MonoBehaviour
 
             prev = nodeRep;
         }
+        
     }
 }

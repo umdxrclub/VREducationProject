@@ -48,6 +48,13 @@ namespace DefaultNamespace
             onListUpdated?.Invoke();
         }
 
+        
+       /** public void splitList()
+        {
+            
+        }
+        */
+
         public IEnumerator<T> GetEnumerator()
         {
             return _toAdd.GetEnumerator();

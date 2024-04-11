@@ -2,21 +2,26 @@ using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class NodeRep : MonoBehaviour
 {
     public LineRenderer lineRenderer;
     public TextMeshProUGUI textLabel;
     public Graphic graphic;
-    public NodeDup nodeDup;
+    public XRGrabInteractable interactable;
+
+    public UnityEvent onNodeLinkBroken;
 
     public Transform origin;
-
     public Transform attach;
-
     public Transform ending;
+    private NodeRep nextNode;
+    private float threshold = 0.1f;
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +44,21 @@ public class NodeRep : MonoBehaviour
             lineRenderer.SetPosition(0, or_pos);
 
             lineRenderer.SetPosition(1, attach_pos);
+
+            
         }
+        
+        if (nextNode && (interactable.isSelected || nextNode.interactable.isSelected))
+        {
+            float distance = Vector3.Distance(this.transform.position, nextNode.transform.position);
+            if (distance > threshold)
+            {
+                this.Link(null);
+                
+            }
+        }
+        
+        
     }
 
     private void LineUpdate()
@@ -54,6 +73,11 @@ public class NodeRep : MonoBehaviour
 
     public void Link(NodeRep other)
     {
+        nextNode = other;
+
+        // Temporary "hack" to prevent grabbing the nodes if they are linked to anything.
+        interactable.interactionLayers = other ? 0 : ~0;
+        
         // If other is valid, set attach to other.ending 
         if (other)
         {
@@ -62,6 +86,10 @@ public class NodeRep : MonoBehaviour
         else
         {
             attach = null;
+            Debug.Log("Its broken");
+            onNodeLinkBroken?.Invoke();
         }
+
+        
     }
 }
