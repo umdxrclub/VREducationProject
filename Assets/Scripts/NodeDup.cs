@@ -16,6 +16,7 @@ public class NodeDup : MonoBehaviour
 
     public void NodeBreakListener()
     {
+        eventLst.RemoveLast();
         BuildList();
     }
 

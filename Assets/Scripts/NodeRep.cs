@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,13 +21,15 @@ public class NodeRep : MonoBehaviour
     public Transform origin;
     public Transform attach;
     public Transform ending;
+    public NodeRep prev;
     private NodeRep nextNode;
-    private float threshold = 0.1f;
+    public float threshold = 1f;
 
     // Start is called before the first frame update
     void Start()
     {
         lineRenderer.enabled = false;
+        interactable.selectExited.AddListener(OnNodeDeSelected);
     }
 
     // Update is called once per frame
@@ -47,20 +50,26 @@ public class NodeRep : MonoBehaviour
 
             
         }
-        
-        if (nextNode && (interactable.isSelected || nextNode.interactable.isSelected))
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("i entered");
+    }
+
+    private void OnNodeDeSelected(SelectExitEventArgs args)
+    {
+        if (prev)
         {
-            float distance = Vector3.Distance(this.transform.position, nextNode.transform.position);
+            float distance = Vector3.Distance(prev.transform.position, transform.position);
             if (distance > threshold)
             {
-                this.Link(null);
+                prev.Link(null);
                 
             }
         }
-        
-        
     }
-
+    
     private void LineUpdate()
     {
     }
@@ -73,15 +82,21 @@ public class NodeRep : MonoBehaviour
 
     public void Link(NodeRep other)
     {
+        if (nextNode)
+        {
+            nextNode.prev = null;
+        }   
+        
         nextNode = other;
 
         // Temporary "hack" to prevent grabbing the nodes if they are linked to anything.
         interactable.interactionLayers = other ? 0 : ~0;
         
         // If other is valid, set attach to other.ending 
-        if (other)
+        if (other )
         {
             attach = other.ending;
+            other.prev = this;
         }
         else
         {
@@ -92,4 +107,6 @@ public class NodeRep : MonoBehaviour
 
         
     }
+    
+    
 }

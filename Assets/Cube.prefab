@@ -392,6 +392,7 @@ GameObject:
   - component: {fileID: 8726075794870208280}
   - component: {fileID: 7108198061630299014}
   - component: {fileID: 55842232196744320}
+  - component: {fileID: 7641871820090586443}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -691,6 +692,8 @@ MonoBehaviour:
   origin: {fileID: 4046873182080769282}
   attach: {fileID: 0}
   ending: {fileID: 3715892813914618689}
+  prev: {fileID: 0}
+  threshold: 0.1
 --- !u!120 &55842232196744320
 LineRenderer:
   serializedVersion: 2
@@ -806,3 +809,24 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!65 &7641871820090586443
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9138821770879969534}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 2, z: 2}
+  m_Center: {x: 1.5, y: 0, z: 0}
